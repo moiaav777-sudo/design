@@ -1,0 +1,23 @@
+import React, {useState,useRef} from 'react';
+import {createRoot} from 'react-dom/client';
+import {gsap} from 'gsap';
+import {useGSAP} from '@gsap/react';
+gsap.registerPlugin(useGSAP);
+let replay;
+function Card(){
+  const ref=useRef();
+  useGSAP(()=>{
+    gsap.from(ref.current,{y:45,opacity:0,rotation:-8,duration:1,ease:'back.out(1.6)'});
+  },{scope:ref});
+  return <div ref={ref} className="react-card"><span>React + useGSAP()</span><h1>Я появился.</h1><p>При скрытии компонент размонтируется, а useGSAP очищает его анимацию.</p></div>;
+}
+function App(){
+  const [visible,setVisible]=useState(true);
+  const [key,setKey]=useState(0);
+  replay=()=>{setVisible(true);setKey(k=>k+1);};
+  return <div className="react-example"><div className="local-controls"><button onClick={()=>setVisible(v=>!v)}>{visible?'Скрыть компонент':'Показать компонент'}</button></div>{visible?<Card key={key}/>:<p>Компонент удалён. Покажите его снова.</p>}</div>;
+}
+window.mountReactDemo=()=>{
+  createRoot(document.querySelector('#react-root')).render(<App/>);
+  window.demoPlay=()=>replay?.();
+};
