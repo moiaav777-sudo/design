@@ -15,16 +15,16 @@ function drawUnion(scale,front){
  ctx.save();ctx.globalCompositeOperation='source-over';
  unionPoints.forEach(p=>{const side=p.i%2?1:-1,angle=(1-ease)*8*side+spin,xx=p.x*Math.cos(angle)+p.z*Math.sin(angle),zz=-p.x*Math.sin(angle)+p.z*Math.cos(angle),x=xx*radius+side*(1-ease)*2.5,y=p.y*radius+Math.sin(p.i*.2+elapsed*3)*(1-ease)*1.2,z=zz*radius;
  if((z>=0)!==front)return;
- const k=4.8/(4.8-z),sx=W/2+x*scale*k,sy=H/2+y*scale*k,twinkle=.5+.5*Math.sin(time*(1.5+(p.i%7)*.12)+p.i*1.37),alpha=progress*(front?.28:.14)+twinkle*progress*(front?.48:.25);
- ctx.fillStyle='#65eaff';ctx.globalAlpha=alpha;ctx.beginPath();ctx.arc(sx,sy,(.7+twinkle*1.1)*k,0,Math.PI*2);ctx.fill();ctx.globalAlpha=alpha*.12;ctx.beginPath();ctx.arc(sx,sy,5*k,0,Math.PI*2);ctx.fill();ctx.globalAlpha=alpha;if(twinkle>.96){ctx.strokeStyle='#99c2ff';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(sx-3,sy);ctx.lineTo(sx+3,sy);ctx.moveTo(sx,sy-3);ctx.lineTo(sx,sy+3);ctx.stroke()}});
+ const k=4.8/(4.8-z),sx=W/2+x*scale*k,sy=H/2+y*scale*k,twinkle=.5+.5*Math.sin(time*(1.5+(p.i%7)*.12)+p.i*1.37),alpha=Math.min(1,progress*(front?.5:.3)+twinkle*progress*(front?.5:.45));
+ ctx.fillStyle='#65eaff';ctx.globalAlpha=alpha;ctx.beginPath();ctx.arc(sx,sy,(1+twinkle*1.6)*k,0,Math.PI*2);ctx.fill();ctx.globalAlpha=alpha*.25;ctx.beginPath();ctx.arc(sx,sy,6*k,0,Math.PI*2);ctx.fill();ctx.globalAlpha=alpha;if(twinkle>.96){ctx.strokeStyle='#99c2ff';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(sx-3,sy);ctx.lineTo(sx+3,sy);ctx.moveTo(sx,sy-3);ctx.lineTo(sx,sy+3);ctx.stroke()}});
  ctx.restore();
 
 }
 // Сердце рисуется позади имён в той же сцене.
 function drawHeartBackdrop(scale){
  ctx.save();ctx.globalCompositeOperation='source-over';
- const pulse=1+.025*Math.sin(time*3);
- for(let i=0;i<1100;i++){const t=i/1100*Math.PI*2+time*(i%2?-.16:.19),spread=.91+.075*Math.sin(i*2.39996+time*.85);const x=16*Math.pow(Math.sin(t),3)/18,y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))/18;ctx.fillStyle='#ff448c';ctx.globalAlpha=.35+.5*(.5+.5*Math.sin(i*.31));ctx.beginPath();ctx.arc(W/2+x*scale*1.25*pulse*spread,H/2+y*scale*1.25*pulse*spread,2,0,Math.PI*2);ctx.fill()}
+ const pulse=1+.025*Math.sin(time*3);const age=Math.max(0,time-namesStart),assembly=Math.min(1,age/3.5),blend=assembly*assembly*(3-2*assembly);
+ for(let i=0;i<1100;i++){const t=i/1100*Math.PI*2+time*(i%2?-.16:.19),spread=.91+.075*Math.sin(i*2.39996+time*.85);const x=16*Math.pow(Math.sin(t),3)/18,y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))/18;ctx.fillStyle='#ff448c';ctx.globalAlpha=.35+.5*(.5+.5*Math.sin(i*.31));ctx.beginPath();const chaosX=Math.sin(i*12.9898+age*2)*2.5,chaosY=Math.cos(i*7.233+age*1.7)*1.8;ctx.arc(W/2+(x*1.25*pulse*spread*blend+chaosX*(1-blend))*scale,H/2+(y*1.25*pulse*spread*blend+chaosY*(1-blend))*scale,2,0,Math.PI*2);ctx.fill()}
  ctx.restore();
 }
 document.querySelectorAll('[data-form]').forEach(b=>b.onclick=()=>targets(b.dataset.form));document.querySelector('#apply').onclick=()=>targets('text');document.querySelector('#burst').onclick=()=>burst();document.querySelector('#pause').textContent=playing?'Пауза':'Продолжить';document.querySelector('#pause').onclick=()=>{playing=!playing;document.querySelector('#pause').textContent=playing?'Пауза':'Продолжить'};c.onpointerdown=e=>{const b=c.getBoundingClientRect(),s=Math.min(W/3.8,H/3);burst((e.clientX-b.left-W/2)/s,(e.clientY-b.top-H/2)/s)};targets(form);document.querySelector('#start').onclick=()=>{document.querySelector('#cover').hidden=true;playing=true;time=0;namesStart=0;targets('names');};requestAnimationFrame(draw);
