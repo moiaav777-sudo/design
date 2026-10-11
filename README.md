@@ -49,3 +49,11 @@ python3 -m http.server 8765
 - `vendor/` — сторонние библиотеки; условия использования см. в их лицензиях и документации.
 
 Данные демонстрационные.
+
+## Каталог для человека и ИИ
+
+- [Выбор по задаче и сравнение](https://moiaav777-sudo.github.io/design/catalog.html)
+- [Машиночитаемый каталог](https://moiaav777-sudo.github.io/design/catalog.json)
+- [Инструкция для нейросети](AI-GUIDE.md)
+
+Описание включает применимость в HTML, PowerPoint и PDF, исходники и зависимости. Пересборка каталога: `node scripts/build-catalog.cjs`.
