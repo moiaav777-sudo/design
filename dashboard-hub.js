@@ -4,8 +4,10 @@ document.querySelectorAll('[data-scene-file]').forEach(button=>button.addEventLi
  document.getElementById('hub-viewer-title').textContent=title;
  document.getElementById('hub-full').href=file;
  const frame=document.createElement('iframe');frame.src=file;frame.title=title;frame.loading='eager';
- document.getElementById('hub-frame').replaceChildren(frame);hubViewer.hidden=false;
+ document.getElementById('hub-frame').replaceChildren(frame);hubViewer.showModal();
  document.querySelectorAll('[data-scene-file]').forEach(b=>b.setAttribute('aria-pressed',b===button));
- hubViewer.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+ 
 }));
-document.getElementById('hub-close').addEventListener('click',()=>{hubViewer.hidden=true;document.getElementById('hub-frame').replaceChildren();document.querySelectorAll('[data-scene-file]').forEach(b=>b.setAttribute('aria-pressed','false'))});
+document.getElementById('hub-close').addEventListener('click',()=>{hubViewer.close();document.getElementById('hub-frame').replaceChildren();document.querySelectorAll('[data-scene-file]').forEach(b=>b.setAttribute('aria-pressed','false'))});
+
+hubViewer.addEventListener("close",()=>document.getElementById("hub-frame").replaceChildren());
