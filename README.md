@@ -22,8 +22,6 @@
 
 Все разделы доступны на одном дашборде: https://moiaav777-sudo.github.io/design/ . Карточки открывают примеры внутри главной страницы; также доступен просмотр в отдельной вкладке.
 
-- [Живая материя](https://moiaav777-sudo.github.io/design/live-matter.html) — 1800 частиц, превращения, текст и взрыв.
-- [Саша + Юля](https://moiaav777-sudo.github.io/design/sasha-yulia.html) — Play → сердце из хаоса → имена → мерцающая сфера.
 - [Неоновая трансформация](https://moiaav777-sudo.github.io/design/neon-russia.html) — Хаос → линия → вихрь → стрела → карта России.
 
 ## Скачать проект
