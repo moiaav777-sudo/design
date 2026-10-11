@@ -3391,6 +3391,7 @@
       "preview": "presentation-patterns.html?id=hero-number",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3418,6 +3419,7 @@
       "preview": "presentation-patterns.html?id=before-after",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3445,6 +3447,7 @@
       "preview": "presentation-patterns.html?id=evidence",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3472,6 +3475,7 @@
       "preview": "presentation-patterns.html?id=timeline",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3499,6 +3503,7 @@
       "preview": "presentation-patterns.html?id=matrix",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3526,6 +3531,7 @@
       "preview": "presentation-patterns.html?id=dashboard",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3546,13 +3552,14 @@
       "title": "Общий объект",
       "category": "Переходы",
       "tasks": [
-        "Связать два состояния слайда"
+        "Карточка результата физически перемещается и увеличивается, сохраняя связь между двумя слайдами."
       ],
-      "purpose": "Связать два состояния слайда",
+      "purpose": "Карточка результата физически перемещается и увеличивается, сохраняя связь между двумя слайдами.",
       "interaction": "Выберите каталог и пример, переключайте исходное и следующее состояние.",
       "preview": "presentation-patterns.html?id=shared",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3573,13 +3580,14 @@
       "title": "Приближение",
       "category": "Переходы",
       "tasks": [
-        "Связать два состояния слайда"
+        "Приближение переносит внимание с общей схемы к отдельному процессу."
       ],
-      "purpose": "Связать два состояния слайда",
+      "purpose": "Приближение переносит внимание с общей схемы к отдельному процессу.",
       "interaction": "Выберите каталог и пример, переключайте исходное и следующее состояние.",
       "preview": "presentation-patterns.html?id=zoom",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3600,13 +3608,14 @@
       "title": "Перестройка карточек",
       "category": "Переходы",
       "tasks": [
-        "Связать два состояния слайда"
+        "Карточки меняются местами; зритель видит изменение порядка, а не новый несвязанный список."
       ],
-      "purpose": "Связать два состояния слайда",
+      "purpose": "Карточки меняются местами; зритель видит изменение порядка, а не новый несвязанный список.",
       "interaction": "Выберите каталог и пример, переключайте исходное и следующее состояние.",
       "preview": "presentation-patterns.html?id=reorder",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3627,13 +3636,14 @@
       "title": "Раскрытие области",
       "category": "Переходы",
       "tasks": [
-        "Связать два состояния слайда"
+        "Новый слой раскрывается поверх старого слева направо, как сравнение до и после."
       ],
-      "purpose": "Связать два состояния слайда",
+      "purpose": "Новый слой раскрывается поверх старого слева направо, как сравнение до и после.",
       "interaction": "Выберите каталог и пример, переключайте исходное и следующее состояние.",
       "preview": "presentation-patterns.html?id=wipe",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3654,13 +3664,14 @@
       "title": "Фокус на детали",
       "category": "Переходы",
       "tasks": [
-        "Связать два состояния слайда"
+        "Две карточки уходят на второй план, выбранный результат остаётся ярким. Контекст сохраняется."
       ],
-      "purpose": "Связать два состояния слайда",
+      "purpose": "Две карточки уходят на второй план, выбранный результат остаётся ярким. Контекст сохраняется.",
       "interaction": "Выберите каталог и пример, переключайте исходное и следующее состояние.",
       "preview": "presentation-patterns.html?id=focus",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3681,13 +3692,14 @@
       "title": "Каскад смыслов",
       "category": "Переходы",
       "tasks": [
-        "Связать два состояния слайда"
+        "Три смысловых блока появляются последовательно: факт, его значение, действие."
       ],
-      "purpose": "Связать два состояния слайда",
+      "purpose": "Три смысловых блока появляются последовательно: факт, его значение, действие.",
       "interaction": "Выберите каталог и пример, переключайте исходное и следующее состояние.",
       "preview": "presentation-patterns.html?id=cascade",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3715,6 +3727,7 @@
       "preview": "presentation-patterns.html?id=problem",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3742,6 +3755,7 @@
       "preview": "presentation-patterns.html?id=distribution",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3769,6 +3783,7 @@
       "preview": "presentation-patterns.html?id=decompose",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3796,6 +3811,7 @@
       "preview": "presentation-patterns.html?id=baseline",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3823,6 +3839,7 @@
       "preview": "presentation-patterns.html?id=scenario",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
@@ -3850,6 +3867,7 @@
       "preview": "presentation-patterns.html?id=conclusion",
       "source_files": [
         "presentation-patterns.html",
+        "presentation-patterns.js",
         "presentation-patterns.json"
       ],
       "dependencies": [],
