@@ -57,3 +57,7 @@ python3 -m http.server 8765
 - [Инструкция для нейросети](AI-GUIDE.md)
 
 Описание включает применимость в HTML, PowerPoint и PDF, исходники и зависимости. Пересборка каталога: `node scripts/build-catalog.cjs`.
+
+## Язык презентаций
+
+[18 новых примеров](https://moiaav777-sudo.github.io/design/presentation-patterns.html): композиции, переходы, истории из данных. [Реестр источников и лицензий](SOURCES-LICENSES.md). Новые реализации без сторонних библиотек.
