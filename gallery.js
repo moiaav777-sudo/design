@@ -1,26 +1,102 @@
+(()=>{"use strict";
 const $=id=>document.getElementById(id);
-const demos=[...DEMOS.filter(d=>d.group==='Исследование'),...DEMOS.filter(d=>d.id.startsWith('story-')&&d.group!=='Исследование'),...DEMOS.filter(d=>d.id.startsWith('chart-')),...DEMOS.filter(d=>!d.id.startsWith('story-')&&!d.id.startsWith('chart-'))];
-const groups=['Все примеры','Исследование','Сложные сцены','Цифры','Графики','Интерактивные графики','Ядро','Прокрутка','Текст','SVG','Интерфейс','Физика и графика','Кривые и разработка'];
-let page=0;const pageSize=9;let group='Все примеры',speed=1,shown=[],codeDemo,codeTab='js',cssText='',reactText='',previewFrame=null,previewDemo=null;
-const state=new Map();const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-$('total').textContent=demos.length;
-function send(s,action,value){if(s?.frame?.contentWindow)s.frame.contentWindow.postMessage({action,value},location.origin);}
-function load(s){if(s.frame)return;const frame=document.createElement('iframe');frame.title=s.demo.title;frame.src='demo.html?id='+encodeURIComponent(s.demo.id)+'&compact=1';s.wrap.appendChild(frame);s.frame=frame;s.ready=false;fitThumb(s);}
-const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{const s=state.get(entry.target.dataset.id);if(!s)return;s.visible=entry.isIntersecting;if(s.visible){load(s);if(s.ready){send(s,'unfreeze');if(!s.played&&!reduced){send(s,'play');s.played=true;}}}else if(s.ready)send(s,'freeze');});},{threshold:.15});
-function render(){observer.disconnect();state.clear();const query=$('search').value.trim().toLowerCase();shown=demos.filter(d=>(group==='Все примеры'||d.group===group)&&[d.title,d.group,d.use,d.hint,...d.plugins].join(' ').toLowerCase().includes(query));const totalShown=shown.length;page=Math.min(page,Math.max(0,Math.ceil(totalShown/pageSize)-1));shown=shown.slice(page*pageSize,(page+1)*pageSize);$('results').textContent=`${totalShown} примеров · страница ${page+1} из ${Math.max(1,Math.ceil(totalShown/pageSize))}`;document.getElementById('gallery-pages').innerHTML=`<button id="page-prev" ${page===0?'disabled':''}>← Назад</button><span>${page+1} / ${Math.max(1,Math.ceil(totalShown/pageSize))}</span><button id="page-next" ${(page+1)*pageSize>=totalShown?'disabled':''}>Далее →</button>`;document.getElementById('page-prev').onclick=()=>{page--;render()};document.getElementById('page-next').onclick=()=>{page++;render()};$('filters').innerHTML=groups.map(g=>`<button class="filter ${g===group?'active':''}" aria-pressed="${g===group}" data-group="${g}">${g}</button>`).join('');$('gallery').innerHTML=shown.length?shown.map(d=>`<article class="card ${d.id.startsWith('story-')?'story':''}" data-id="${d.id}"><div class="card-head"><div class="card-meta"><span>${d.group}</span><span class="number">${String(demos.indexOf(d)+1).padStart(2,'0')}</span></div><h2>${d.title}</h2></div><div class="demo-wrap"><div class="waiting">Подготовка примера…</div></div><div class="card-body"><p class="hint">${d.hint}</p><p class="use"><b>Где использовать:</b> ${d.use}</p><div class="actions"><button class="play" data-action="play">Повторить</button><button data-action="reset">Сброс</button><button data-action="expand">Открыть</button><button data-action="code">Код</button></div></div></article>`).join(''):'<div class="empty">Совпадений нет. Попробуйте «линия», «счётчик», «текст» или другую категорию.</div>';shown.forEach(d=>{const card=document.querySelector(`[data-id="${d.id}"]`),wrap=card.querySelector('.demo-wrap');const s={demo:d,card,wrap,frame:null,ready:false,visible:false,played:false};state.set(d.id,s);observer.observe(card);});}
-$('filters').onclick=e=>{if(e.target.dataset.group){group=e.target.dataset.group;page=0;render();}};$('search').oninput=()=>{page=0;render()};
-$('speed').onchange=e=>{speed=+e.target.value;state.forEach(s=>send(s,'speed',speed));};
-$('replay-visible').onclick=()=>state.forEach(s=>{if(s.visible){load(s);if(s.ready){send(s,'play');s.played=true;}else s.pendingPlay=true;}});
-$('gallery').onclick=e=>{const action=e.target.dataset.action,card=e.target.closest('.card');if(!action||!card)return;const s=state.get(card.dataset.id);if(action==='expand'){openPreview(s.demo);return;}if(action==='code'){codeDemo=s.demo;codeTab='js';showCode();$('code-dialog').showModal();return;}if(action==='reset'){if(s.frame)s.frame.remove();s.frame=null;s.ready=false;s.played=true;s.card.classList.remove('error');const waiting=document.createElement('div');waiting.className='waiting';waiting.textContent='Подготовка примера…';s.wrap.replaceChildren(waiting);load(s);return;}load(s);if(s.ready){send(s,'play');s.played=true;}else s.pendingPlay=true;};
-window.addEventListener('message',e=>{if(e.origin!==location.origin)return;const s=state.get(e.data?.id);if(!s||e.source!==s.frame?.contentWindow)return;if(e.data.type==='demo-ready'){s.ready=true;s.wrap.querySelector('.waiting')?.remove();send(s,'speed',speed);if(s.pendingPlay||s.visible&&!s.played&&!reduced){send(s,'play');s.played=true;s.pendingPlay=false;}if(!s.visible)send(s,'freeze');}else if(e.data.type==='demo-height'&&s.demo.id.startsWith('story-')){/* thumbnail dimensions remain fixed */}else if(e.data.type==='demo-error'){s.card.classList.add('error');let waiting=s.wrap.querySelector('.waiting');if(!waiting){waiting=document.createElement('div');waiting.className='waiting';s.wrap.appendChild(waiting);}waiting.textContent='Пример не запустился. Нажмите «Сброс», чтобы повторить.';console.error(s.demo.id,e.data.message);}});
-function sourceJS(d){if(d.id==='react')return reactText||'Загрузка исходника React…';const imports=['gsap',...d.plugins.map(p=>({'@pixi':'pixi','@easel':'easeljs','@react':'react-demo'}[p]||p))].map(p=>`// Библиотека: vendor/${p}.min.js`).join('\n');const helper='const q = s => document.querySelector(s);\nconst qa = s => [...document.querySelectorAll(s)];\n// Кнопка .play запускает созданную анимацию.\nfunction wire(animation) {\n  window.demoAnimation = animation;\n  document.querySelector(".play").onclick = () => animation.restart();\n  const seek = document.querySelector(".scene-seek");\n  if (seek) {\n    const oldUpdate = animation.eventCallback("onUpdate");\n    animation.eventCallback("onUpdate", () => {\n      if (oldUpdate) oldUpdate.call(animation);\n      seek.value = animation.progress();\n    });\n    seek.oninput = e => animation.progress(+e.target.value).pause();\n  }\n  document.querySelector(".local-play")?.addEventListener("click", () => animation.restart());\n  document.querySelector(".local-pause")?.addEventListener("click", () => animation.pause());\n}\n';return '// Подключение библиотек:\n'+imports+'\n\n'+(d.plugins.filter(p=>!p.startsWith('@')).length?'gsap.registerPlugin('+d.plugins.filter(p=>!p.startsWith('@')).join(', ')+');\n\n':'')+helper+'\n('+d.run.toString()+')();\nif (window.demoPlay) {\n  document.querySelector(".play").onclick = window.demoPlay;\n}\n\n// В интерактивных сценах demoPlay() запускает демонстрационное действие.\n// Основные действия привязаны к кнопкам, жестам и ползункам сцены.';}
-function showCode(){if(!codeDemo)return;$('code-title').textContent=codeDemo.title;$('docs').href=codeDemo.doc;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tab===codeTab));$('source').textContent=codeTab==='js'?sourceJS(codeDemo):codeTab==='html'?'<link rel="stylesheet" href="brand-fonts.css">\n<link rel="stylesheet" href="demo.css">\n<link rel="stylesheet" href="brand-demos.css">\n'+['gsap',...codeDemo.plugins.map(p=>({'@pixi':'pixi','@easel':'easeljs','@react':'react-demo'}[p]||p))].map(p=>'<script src="vendor/'+p+(p==='react-demo'?'.js':'.min.js')+'"><\/script>').join('\n')+'\n<main id="scene">\n'+codeDemo.html+'\n</main>\n<button class="play">Запустить</button>':cssText||'Загрузка стилей…';$('code-note').textContent=codeTab==='js'?'Это код, который выполняется в карточке. Разметка и стили — в соседних вкладках.':'Разметка и общие стили живых примеров.';}
-document.querySelector('.code-tabs').onclick=e=>{if(e.target.dataset.tab){codeTab=e.target.dataset.tab;showCode();}};$('close-code').onclick=()=>$('code-dialog').close();$('code-dialog').onclick=e=>{if(e.target===$('code-dialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}};
-$('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('source').textContent);$('copy').textContent='Скопировано';setTimeout(()=>$('copy').textContent='Копировать',1500);}catch{$('code-note').textContent='Выделите код и скопируйте его вручную.';}};
-Promise.all([Promise.all(['brand-fonts.css','demo.css','brand-demos.css'].map(path=>fetch(path).then(r=>r.text()))).then(parts=>parts.join('\n')),fetch('react-example.txt').then(r=>r.text())]).then(([css,react])=>{cssText=css;reactText=react;showCode();});render();
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* Отдельные сцены: превью — готовые картинки, живая сцена открывается крупно. */
+const SCENES=[
+  {id:"network-sphere",title:"Сфера с молниями",desc:"Вращение, выбор узлов, десять молний со столкновениями.",task:"Показать связи"},
+  {id:"volume-atlas",title:"Атлас объёмных фигур",desc:"Сфера и десять дополнительных форм, настройка геометрии, плавные переходы.",task:"Привлечь внимание"},
+  {id:"process-scenes",title:"Объёмные процессы",desc:"Потоки по сети, реактор с очередью, цепная реакция.",task:"Объяснить процесс"},
+  {id:"canvas-lab",title:"Canvas-лаборатория",desc:"Частицы, волны, радар, орбиты, рисование и поле потоков; экспорт PNG.",task:"Организовать взаимодействие"},
+  {id:"neon-russia",title:"Неоновая трансформация",desc:"Хаос → линия → вихрь → стрела → карта России.",task:"Провести через историю"}
+].map(s=>({...s,kind:"scene",group:"Отдельные сцены",file:s.id+".html",use:s.desc,hint:s.desc,plugins:[]}));
+const DEMO_ORDER=[...DEMOS.filter(d=>d.group==="Исследование"),...DEMOS.filter(d=>d.id.startsWith("story-")&&d.group!=="Исследование"),...DEMOS.filter(d=>d.id.startsWith("chart-")),...DEMOS.filter(d=>!d.id.startsWith("story-")&&!d.id.startsWith("chart-"))];
+const GROUPS=["Исследование","Сложные сцены","Цифры","Графики","Интерактивные графики","Ядро","Прокрутка","Текст","SVG","Интерфейс","Физика и графика","Кривые и разработка"];
+const lib=[...SCENES,...DEMO_ORDER.map(d=>({kind:"demo",id:d.id,title:d.title,group:d.group,use:d.use,hint:d.hint,plugins:d.plugins,doc:d.doc,d,task:""}))];
+lib.forEach((x,i)=>x.num=i+1);
+const ALL="Все примеры";
+const params=new URLSearchParams(location.search);
+let group=params.get("group")||ALL,speed=1,codeItem=null,codeTab="js",cssText="",reactText="",current=null;
+if(group!==ALL&&!lib.some(x=>x.group===group))group=ALL;
+$("search").value=params.get("q")||"";
+$("total").textContent=lib.length;
 
-function openPreview(demo){previewDemo=demo;previewFrame=document.createElement('iframe');previewFrame.title=demo.title;previewFrame.src='demo.html?id='+encodeURIComponent(demo.id);$('preview-title').textContent=demo.title;document.querySelector('.preview-note').textContent=demo.hint+' Где применять: '+demo.use;$('preview-frame').replaceChildren(previewFrame);$('preview-dialog').showModal();state.forEach(s=>send(s,'freeze'));}
-$('close-preview').onclick=()=>$('preview-dialog').close();$('preview-dialog').addEventListener('close',()=>{$('preview-frame').replaceChildren();previewFrame=null;previewDemo=null;state.forEach(s=>{if(s.visible)send(s,'unfreeze');});});
-window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==previewFrame?.contentWindow)return;if(e.data.type==='demo-ready'){previewFrame.contentWindow.postMessage({action:'speed',value:speed},location.origin);if(!reduced)previewFrame.contentWindow.postMessage({action:'play'},location.origin);}});
+function matches(x,q){return(group===ALL||x.group===group)&&(!q||[x.title,x.group,x.use,x.hint,x.task,...x.plugins].join(" ").toLowerCase().includes(q))}
+function renderFilters(){
+  const names=[ALL,"Отдельные сцены",...GROUPS.filter(g=>lib.some(x=>x.group===g)),...[...new Set(lib.map(x=>x.group))].filter(g=>g!=="Отдельные сцены"&&!GROUPS.includes(g))];
+  $("filters").replaceChildren(...names.map(g=>{const b=document.createElement("button");b.type="button";b.className="chip"+(g===group?" active":"");b.setAttribute("aria-pressed",g===group);b.dataset.group=g;b.textContent=g+" ";const n=document.createElement("small");n.textContent=g===ALL?lib.length:lib.filter(x=>x.group===g).length;b.append(n);return b}));
+}
+function open(x){x.kind==="scene"?openScene(x):openDemo(x)}
+function onAction(act,o){const x=lib.find(i=>i.id===o.id);if(!x)return;if(act==="code")showCodeDialog(x);else open(x)}
+function render(){
+  const q=$("search").value.trim().toLowerCase(),box=$("gallery");
+  AtlasCards.clear(box);
+  const shown=lib.filter(x=>matches(x,q));
+  $("results").textContent=shown.length+" из "+lib.length+" примеров";
+  renderFilters();
+  if(!shown.length){const p=document.createElement("p");p.className="empty";p.textContent="Совпадений нет. Попробуйте «линия», «счётчик», «текст» или другую категорию.";box.replaceChildren(p);return}
+  const frag=document.createDocumentFragment();
+  shown.forEach(x=>frag.append(AtlasCards.card({id:x.id,title:x.title,desc:x.use,num:x.num,
+    tags:[x.group,...(x.task?[x.task]:[])],
+    src:x.kind==="demo"?"demo.html?id="+encodeURIComponent(x.id)+"&compact=1":null,
+    poster:x.kind==="scene"?"previews/"+x.id+".png":null,
+    badge:x.kind==="scene"?"3D-сцена":null,
+    actions:[{act:"code",label:"Код"},{act:"open",label:"→",primary:true,aria:"Открыть «"+x.title+"» крупно"}],onAction})));
+  box.replaceChildren(frag);
+}
+$("filters").onclick=e=>{const b=e.target.closest("[data-group]");if(b){group=b.dataset.group;render()}};
+$("search").oninput=render;
+$("speed").onchange=e=>{speed=+e.target.value;AtlasCards.setSpeed(speed)};
+$("replay-visible").onclick=()=>AtlasCards.replayVisible();
 
-function fitThumb(s){if(!s.frame)return;const w=s.wrap.clientWidth,h=s.wrap.clientHeight,k=Math.min(w/900,h/500);Object.assign(s.frame.style,{width:"900px",height:"500px",transform:`scale(${k})`,transformOrigin:"top left",position:"absolute",left:((w-900*k)/2)+"px",top:((h-500*k)/2)+"px"})}window.addEventListener("resize",()=>state.forEach(fitThumb));
+/* Крупный просмотр */
+const pd=$("preview-dialog");
+function openDemo(x){
+  const f=document.createElement("iframe");f.title=x.title;f.src="demo.html?id="+encodeURIComponent(x.id);
+  fillPreview(x,f,f.src);
+  const onMsg=e=>{if(e.origin!==location.origin||e.source!==f.contentWindow)return;if(e.data.type==="demo-ready"){f.contentWindow.postMessage({action:"speed",value:speed},location.origin);if(!reduced)f.contentWindow.postMessage({action:"play"},location.origin)}};
+  addEventListener("message",onMsg);pd.addEventListener("close",()=>removeEventListener("message",onMsg),{once:true});
+}
+function openScene(x){const f=document.createElement("iframe");f.title=x.title;f.src=x.file;fillPreview(x,f,x.file)}
+function fillPreview(x,frame,full){
+  current=x;AtlasCards.pause();
+  $("preview-group").textContent=x.group;$("preview-title").textContent=x.title;$("preview-full").href=full;
+  $("preview-note").textContent=x.kind==="demo"?x.hint+" Где применять: "+x.use:x.desc+" Данные демонстрационные.";
+  $("preview-frame").replaceChildren(frame);pd.showModal();
+}
+$("close-preview").onclick=()=>pd.close();
+pd.addEventListener("close",()=>{$("preview-frame").replaceChildren();current=null;AtlasCards.resume()});
+$("preview-code").onclick=()=>{if(current){const x=current;pd.close();showCodeDialog(x)}};
+for(const d of [pd,$("code-dialog")])d.addEventListener("click",e=>{if(e.target===d)d.close()});
+
+/* Исходный код */
+function sourceJS(d){
+  if(d.id==="react")return reactText||"Загрузка исходника React…";
+  const libName=p=>({"@pixi":"pixi","@easel":"easeljs","@react":"react-demo"}[p]||p);
+  const imports=["gsap",...d.plugins.map(libName)].map(p=>"// Библиотека: vendor/"+p+".min.js").join("\n");
+  const helper='const q = s => document.querySelector(s);\nconst qa = s => [...document.querySelectorAll(s)];\n// Кнопка .play запускает созданную анимацию.\nfunction wire(animation) {\n  window.demoAnimation = animation;\n  document.querySelector(".play").onclick = () => animation.restart();\n  const seek = document.querySelector(".scene-seek");\n  if (seek) {\n    const oldUpdate = animation.eventCallback("onUpdate");\n    animation.eventCallback("onUpdate", () => {\n      if (oldUpdate) oldUpdate.call(animation);\n      seek.value = animation.progress();\n    });\n    seek.oninput = e => animation.progress(+e.target.value).pause();\n  }\n  document.querySelector(".local-play")?.addEventListener("click", () => animation.restart());\n  document.querySelector(".local-pause")?.addEventListener("click", () => animation.pause());\n}\n';
+  const gsapPlugins=d.plugins.filter(p=>!p.startsWith("@"));
+  return "// Подключение библиотек:\n"+imports+"\n\n"+(gsapPlugins.length?"gsap.registerPlugin("+gsapPlugins.join(", ")+");\n\n":"")+helper+"\n("+d.run.toString()+")();\nif (window.demoPlay) {\n  document.querySelector(\".play\").onclick = window.demoPlay;\n}\n\n// В интерактивных сценах demoPlay() запускает демонстрационное действие.\n// Основные действия привязаны к кнопкам, жестам и ползункам сцены.";
+}
+function showCode(){
+  const x=codeItem;if(!x)return;
+  $("code-title").textContent=x.title;
+  const scene=x.kind==="scene";
+  document.querySelector(".code-tabs").querySelectorAll("[data-tab]").forEach(b=>{b.hidden=scene;b.setAttribute("aria-pressed",b.dataset.tab===codeTab)});
+  $("docs").hidden=scene;
+  if(scene){$("code-note").textContent="Сцена — один самодостаточный HTML-файл: разметка, стили и скрипт внутри.";$("source").textContent="Загрузка "+x.file+"…";fetch(x.file).then(r=>r.ok?r.text():Promise.reject()).then(t=>{if(codeItem===x)$("source").textContent=t}).catch(()=>{$("source").textContent="Не удалось загрузить файл. Откройте "+x.file+" напрямую."});return}
+  const d=x.d;$("docs").hidden=false;$("docs").href=x.doc;
+  const libs=["gsap",...d.plugins.map(p=>({"@pixi":"pixi","@easel":"easeljs","@react":"react-demo"}[p]||p))].map(p=>'<script src="vendor/'+p+(p==="react-demo"?".js":".min.js")+'"><\/script>').join("\n");
+  $("source").textContent=codeTab==="js"?sourceJS(d):codeTab==="html"?'<link rel="stylesheet" href="brand-fonts.css">\n<link rel="stylesheet" href="demo.css">\n<link rel="stylesheet" href="brand-demos.css">\n'+libs+'\n<main id="scene">\n'+d.html+'\n</main>\n<button class="play">Запустить</button>':cssText||"Загрузка стилей…";
+  $("code-note").textContent=codeTab==="js"?"Это код, который выполняется в карточке. Разметка и стили — в соседних вкладках.":"Разметка и общие стили живых примеров.";
+}
+function showCodeDialog(x){codeItem=x;codeTab="js";showCode();$("code-dialog").showModal();AtlasCards.pause()}
+$("code-dialog").addEventListener("close",()=>{if(!pd.open)AtlasCards.resume()});
+document.querySelector(".code-tabs").onclick=e=>{const t=e.target.dataset.tab;if(t){codeTab=t;showCode()}};
+$("close-code").onclick=()=>$("code-dialog").close();
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText($("source").textContent);$("copy").textContent="Скопировано";setTimeout(()=>$("copy").textContent="Копировать",1500)}catch{$("code-note").textContent="Выделите код и скопируйте его вручную."}};
+Promise.all([Promise.all(["brand-fonts.css","demo.css","brand-demos.css"].map(p=>fetch(p).then(r=>r.text()))).then(a=>a.join("\n")),fetch("react-example.txt").then(r=>r.text())]).then(([css,react])=>{cssText=css;reactText=react;if($("code-dialog").open)showCode()}).catch(()=>{});
+
+/* Задачи из каталога (необязательно): добавляют вторую метку на карточку */
+fetch("catalog.json").then(r=>r.ok?r.json():Promise.reject()).then(j=>{const t=new Map((j.entries||[]).map(e=>[e.id,(e.tasks||[])[0]||""]));let changed=false;lib.forEach(x=>{if(!x.task&&t.get(x.id)){x.task=t.get(x.id);changed=true}});if(changed)render()}).catch(()=>{});
+render();
+})();
