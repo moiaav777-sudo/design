@@ -17,6 +17,7 @@ jobs:
         run: |
           node --check gallery.js
           node --check design-refresh.js
+          node --check atlas-light.js
       - name: Catalogue and page consistency
         run: |
           node - <<'NODE'
@@ -24,7 +25,8 @@ jobs:
           const html=fs.readFileSync('index.html','utf8');
           const cat=JSON.parse(fs.readFileSync('catalog.json','utf8'));
           if(!Array.isArray(cat.entries)||cat.entries.length<92) throw Error('Catalog missing demonstrations');
-          for(const s of ['design-refresh.css','design-refresh.js','gallery.js','dashboard-hub.js','portal-v2.css','atlas-cinematic.css']) if(!html.includes(s)||!fs.existsSync(s)) throw Error('Missing asset '+s);
-          if(!html.includes('id="design-prompt"')||!html.includes('id="gallery"')||!html.includes('id="design-agents"')) throw Error('Broken page sections');
+          for(const s of ['atlas-light.css','atlas-light.js']) if(!html.includes(s)||!fs.existsSync(s)) throw Error('Missing homepage asset '+s);
+          const gallery=fs.readFileSync('gallery.html','utf8'); if(!gallery.includes('id="gallery"')||!gallery.includes('gallery.js')) throw Error('Legacy gallery missing');
+          if(!html.includes('id="prompt"')||!html.includes('id="examples"')||!html.includes('id="agents"')) throw Error('Broken homepage sections');
           const catalogPage=fs.readFileSync('catalog.html','utf8'); if(!catalogPage.includes('catalog-v2.css')||!fs.existsSync('catalog-v2.css')||!fs.existsSync('catalog-cinematic.css'))throw Error('Catalog portal styling missing'); console.log('Catalogue entries:',cat.entries.length,'; page assets OK');
           NODE
