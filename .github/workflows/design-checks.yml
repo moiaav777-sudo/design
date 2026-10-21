@@ -1,0 +1,30 @@
+name: Design static checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: |
+          node --check gallery.js
+          node --check design-refresh.js
+      - name: Catalogue and page consistency
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const html=fs.readFileSync('index.html','utf8');
+          const cat=JSON.parse(fs.readFileSync('catalog.json','utf8'));
+          if(!Array.isArray(cat.entries)||cat.entries.length<92) throw Error('Catalog missing demonstrations');
+          for(const s of ['design-refresh.css','design-refresh.js','gallery.js','dashboard-hub.js']) if(!html.includes(s)||!fs.existsSync(s)) throw Error('Missing asset '+s);
+          if(!html.includes('id="design-prompt"')||!html.includes('id="gallery"')||!html.includes('id="design-agents"')) throw Error('Broken page sections');
+          console.log('Catalogue entries:',cat.entries.length,'; page assets OK');
+          NODE
