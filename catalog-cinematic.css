@@ -1,7 +1,31 @@
-/* Каталог: сравнение, карточка применимости и выделение выбранных */
-#compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}#compare:empty{display:none}
-#compare section{background:#fff;border:1px solid #eaf0f9;border-radius:14px;padding:14px;box-shadow:0 9px 25px #4d67a516}#compare h2{font-size:16px;margin:0 0 10px}#compare iframe{width:100%;height:420px;border:1px solid #e5ebf8;border-radius:10px;margin-top:10px;background:#160d30}
-#detail{background:#fff;border:1px solid #eaf0f9;border-radius:16px;padding:22px;margin:16px 0 26px;box-shadow:0 9px 25px #4d67a516}#detail[hidden]{display:none}#detail h2{margin:0 0 10px}#detail p{line-height:1.65;color:#40507a;max-width:820px}#detail a{font-weight:700;color:#4b41d5}
-#detail pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#0e1743;color:#dfe5ff;padding:16px;border-radius:12px;font-size:12px}
-.mc.is-compared{border-color:#8763ff;box-shadow:0 0 0 2px #8763ff55,0 9px 25px #4d67a516}
+/* Каталог: сравнение двух примеров, карточка применимости, выделение выбранных */
+#compare, #detail { scroll-margin-top: 210px; }
+#compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0 14px; align-items: stretch; margin: 18px 0 26px; }
+#compare:empty { display: none; }
+#compare section { position: relative; min-width: 0; padding: 16px; border-radius: 20px; background: linear-gradient(160deg, rgba(37, 22, 104, .6), rgba(8, 5, 28, .85)); border: 1px solid var(--line-2); animation: pop .6s var(--ease) both; }
+#compare section:nth-of-type(1) { box-shadow: 0 0 50px rgba(45, 226, 255, .22); border-color: rgba(45, 226, 255, .55); }
+#compare section:nth-of-type(2) { box-shadow: 0 0 50px rgba(255, 62, 165, .22); border-color: rgba(255, 62, 165, .55); animation-delay: .12s; }
+.cmp-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.cmp-head small { display: block; font: 600 10px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); margin-bottom: 4px; }
+#compare section:nth-of-type(2) .cmp-head small { color: var(--magenta); }
+#compare h2 { font-size: 18px; letter-spacing: -.03em; margin: 0; }
+#compare iframe { display: block; width: 100%; height: 420px; border: 1px solid var(--line); border-radius: 12px; background: #0b0826; color-scheme: dark; }
+#compare section p { margin: 12px 2px 0; font-size: 13px; line-height: 1.55; color: var(--ink-2); }
+.vs { align-self: center; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; font-weight: 800; font-size: 15px; letter-spacing: .04em; color: #07041a; background: linear-gradient(135deg, var(--cyan), var(--magenta)); box-shadow: 0 0 40px rgba(139, 92, 255, .7); animation: vs 2.4s ease-in-out infinite; }
+@keyframes vs { 50% { transform: scale(1.12) rotate(8deg); } }
 
+#detail { position: relative; padding: clamp(18px, 3vw, 34px); margin: 18px 0 28px; border-radius: 22px; background: linear-gradient(160deg, rgba(37, 22, 104, .55), rgba(8, 5, 28, .85)); border: 1px solid var(--line-2); box-shadow: var(--glow-violet); animation: pop .5s var(--ease) both; }
+#detail[hidden] { display: none; }
+#detail h2 { margin: 12px 0 14px; font-size: clamp(24px, 2.6vw, 38px); letter-spacing: -.045em; }
+#detail h3 { margin: 26px 0 10px; font: 600 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); }
+#detail p { line-height: 1.7; color: var(--ink-2); max-width: 860px; margin: 0 0 10px; }
+.detail-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.detail-tags span { font: 600 11px var(--mono); padding: 5px 11px; border-radius: 20px; color: var(--cyan); border: 1px solid var(--line-2); background: var(--glass-2); }
+#detail .btn-primary { margin-top: 10px; }
+#detail pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #04030d; color: #d6dcff; border: 1px solid var(--line); padding: 16px; border-radius: 14px; font: 12px/1.7 var(--mono); }
+
+@media (max-width: 900px) {
+  #compare { grid-template-columns: 1fr; gap: 14px; }
+  .vs { justify-self: center; }
+  #compare iframe { height: 320px; }
+}

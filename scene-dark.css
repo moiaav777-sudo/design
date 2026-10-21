@@ -1,0 +1,38 @@
+/* Неоновая тема для отдельных сцен (network-sphere, volume-atlas, process-scenes, canvas-lab).
+   Сцены — самодостаточные HTML-файлы со своими светлыми стилями; этот файл подключается после них
+   и перекрашивает страницу под портал. Цвета внутри canvas заданы в самих сценах. */
+:root { color-scheme: dark; }
+body {
+  margin: 0; min-height: 100vh; color: #e6e9ff !important; font-family: 'Golos Text', Arial, sans-serif;
+  background: radial-gradient(ellipse at 85% 0%, rgba(139, 92, 255, .35), transparent 55%), radial-gradient(ellipse at 10% 100%, rgba(45, 226, 255, .18), transparent 55%), linear-gradient(180deg, #0a0722, #04030d) fixed !important;
+}
+h1 { color: #fff !important; letter-spacing: -.04em; text-shadow: 0 0 30px rgba(139, 92, 255, .5); }
+p, label, details, summary, output { color: #b4b9e6 !important; }
+summary { cursor: pointer; color: #2de2ff !important; font-weight: 700; }
+code { color: #2de2ff !important; }
+a { color: #2de2ff; }
+details { border-top-color: rgba(150, 160, 255, .25) !important; }
+.stage, canvas {
+  background: radial-gradient(ellipse at 50% 40%, #1b1163, #0a0722 75%) !important;
+  border: 1px solid rgba(150, 160, 255, .3) !important; border-radius: 18px !important;
+  box-shadow: 0 0 60px rgba(139, 92, 255, .2);
+}
+.stage canvas { border: 0 !important; box-shadow: none; }
+.info, #metrics { background: rgba(6, 4, 22, .78) !important; color: #e6e9ff !important; border: 1px solid rgba(150, 160, 255, .3); backdrop-filter: blur(8px); }
+pre { background: #04030d !important; color: #d6dcff !important; border: 1px solid rgba(150, 160, 255, .25); }
+button, select {
+  font-family: inherit; color: #e6e9ff !important; background: rgba(255, 255, 255, .06) !important;
+  border: 1px solid rgba(150, 160, 255, .35) !important; border-radius: 12px !important; transition: border-color .3s, box-shadow .3s;
+}
+button:hover, select:hover { border-color: #2de2ff !important; box-shadow: 0 0 18px rgba(45, 226, 255, .35); }
+button[aria-pressed=true], .shape-button[aria-pressed="true"] {
+  color: #07041a !important; font-weight: 700; border-color: transparent !important;
+  background: linear-gradient(105deg, #2de2ff, #8e9bff) !important; box-shadow: 0 0 24px rgba(45, 226, 255, .45);
+}
+select option { background: #120b34; color: #e6e9ff; }
+input[type=range] { accent-color: #2de2ff; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid #2de2ff; outline-offset: 3px; }
+/* вкладки разделов портала (стили заданы прямо в разметке сцен) */
+.portal-tabs a { background: rgba(255, 255, 255, .06) !important; color: #b4b9e6 !important; border: 1px solid rgba(150, 160, 255, .25); transition: border-color .3s, box-shadow .3s; }
+.portal-tabs a:hover { border-color: #2de2ff; box-shadow: 0 0 18px rgba(45, 226, 255, .35); }
+.portal-tabs a[aria-current] { background: linear-gradient(105deg, #2de2ff, #8e9bff) !important; color: #07041a !important; font-weight: 700; border-color: transparent; }

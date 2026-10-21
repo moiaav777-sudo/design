@@ -1,49 +1,98 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Подбор визуализаций — Design Atlas</title><meta name="description" content="Каталог Design Atlas по задачам: микрокарточки с живым превью, применимость в HTML, PowerPoint и PDF, сравнение двух примеров и исходники."><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23062a5f'/%3E%3Cpath d='M8 18L18 6l-2 9h8L14 27l2-9z' fill='%2399c2ff'/%3E%3C/svg%3E"><link rel="stylesheet" href="brand-fonts.css"><link rel="stylesheet" href="atlas-light.css"><link rel="stylesheet" href="catalog-v2.css"><link rel="stylesheet" href="catalog-cinematic.css"></head><body>
-<header class="topbar"><a class="brand" href="./" aria-label="Design Atlas — главная"><span class="brand-symbol">⬡</span><span>design<span class="dot">.</span><small>ATLAS</small></span></a><nav aria-label="Навигация"><a href="./">Обзор</a><a href="./#finder">Подбор</a><a href="gallery.html">Библиотека</a><a class="selected" href="catalog.html" aria-current="page">Каталог</a><a href="./#agents">Для ИИ</a></nav><a class="top-cta" href="https://github.com/moiaav777-sudo/design">GitHub <span>↗</span></a></header>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0722">
+<title>Подбор визуализаций — Design Atlas</title>
+<meta name="description" content="Каталог Design Atlas по задачам: микрокарточки с живым превью, применимость в HTML, PowerPoint и PDF, сравнение двух примеров и исходники.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0722'/%3E%3Cpath d='M16 4l10 6v12l-10 6-10-6V10z' fill='none' stroke='%232de2ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ff3ea5'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="brand-fonts.css">
+<link rel="stylesheet" href="atlas-light.css">
+<link rel="stylesheet" href="catalog-v2.css">
+<link rel="stylesheet" href="catalog-cinematic.css">
+</head>
+<body>
+<a class="skip" href="#list">К списку приёмов</a>
+<header class="topbar">
+  <a class="brand" href="./" aria-label="Design Atlas — главная"><span class="brand-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="#2de2ff" stroke-width="1.7" aria-hidden="true"><path d="M12 2.5l8.5 5v9L12 21.5l-8.5-5v-9z"/><circle cx="12" cy="12" r="2.6" fill="#ff3ea5" stroke="none"/></svg></span><span>design<span class="dot">.</span><small>ATLAS</small></span></a>
+  <nav aria-label="Навигация"><a href="./">Обзор</a><a href="./#finder">Подбор</a><a href="gallery.html">Библиотека</a><a class="selected" href="catalog.html" aria-current="page">Каталог</a><a href="./#agents">Промпт</a></nav>
+  <a class="top-cta" href="https://github.com/moiaav777-sudo/design">GitHub <span aria-hidden="true">↗</span></a>
+</header>
 <main>
-<section class="cat-head"><div class="ambient"></div><div class="eyebrow">КАТАЛОГ ПО ЗАДАЧАМ</div><h1>Найдите визуализацию <em>для вашей задачи.</em></h1><p>Сравнивайте интерактивные решения, изучайте ограничения форматов и находите исходники. Выбирайте по смыслу, а не только по эффекту.</p><div class="cat-links"><a href="catalog.json">JSON для агентов ↗</a><a href="AI-GUIDE.md">Руководство по внедрению ↗</a><a href="gallery.html">Вся библиотека на микрокарточках ↗</a></div></section>
-<section class="lib-tools" aria-label="Параметры подбора"><div class="cat-controls"><label>Поиск<input id="query" type="search" placeholder="Например, число или очередь" autocomplete="off"></label><label>Задача<select id="task"><option value="">Все задачи</option></select></label><label>Формат<select id="format"><option value="html">HTML — живой интерактив</option><option value="powerpoint">PowerPoint — адаптация</option><option value="pdf">PDF — статичный кадр</option></select></label></div></section>
-<p id="format-note" class="cat-note"></p>
+<section class="cat-head">
+  <div class="eyebrow" data-reveal>Каталог по задачам</div>
+  <h1 data-reveal style="--d:1">Найдите визуализацию <em class="grad">для вашей задачи.</em></h1>
+  <p data-reveal style="--d:2">Сравнивайте интерактивные решения, изучайте ограничения форматов и находите исходники. Выбирайте по смыслу, а не только по эффекту.</p>
+  <div class="cat-links" data-reveal style="--d:3"><a href="catalog.json">JSON для агентов ↗</a><a href="AI-GUIDE.md">Руководство по внедрению ↗</a><a href="gallery.html">Вся библиотека на микрокарточках ↗</a></div>
+</section>
+<section class="lib-tools cat-tools" aria-label="Параметры подбора">
+  <div class="cat-controls">
+    <label>Поиск<input id="query" type="search" placeholder="Например, число или очередь" autocomplete="off"></label>
+    <label>Задача<select id="task"><option value="">Все задачи</option></select></label>
+    <label>Формат<select id="format"><option value="html">HTML — живой интерактив</option><option value="powerpoint">PowerPoint — адаптация</option><option value="pdf">PDF — статичный кадр</option></select></label>
+  </div>
+  <p id="format-note" class="cat-note"></p>
+</section>
 <div class="result-line"><span id="count" aria-live="polite"></span><span>Нажмите «Сравнить» у двух примеров, чтобы поставить их рядом</span></div>
 <div id="compare"></div>
-<section id="detail" hidden></section>
+<section id="detail" hidden aria-live="polite"></section>
 <div id="list" class="mc-grid"></div>
 <noscript><p class="empty">Для каталога включите JavaScript.</p></noscript>
 </main>
 <footer><a href="./">◈ design. ATLAS</a><span>Данные в примерах демонстрационные</span><a href="gallery.html">Вернуться к библиотеке ↗</a></footer>
+<script src="atlas-fx.js"></script>
 <script src="atlas-cards.js"></script>
 <script>
 (()=>{"use strict";
 const $=id=>document.getElementById(id);let data,comparison=[];
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function p(text){const n=document.createElement("p");n.textContent=text;return n}
+/* Карточка применимости выбранного примера */
 function show(d){
   const box=$("detail");box.hidden=false;box.replaceChildren();
-  const h=document.createElement("h2");h.textContent=d.title;box.append(h);
+  const tags=document.createElement("div");tags.className="detail-tags";
+  [d.category,...d.tasks].forEach(t=>{const s=document.createElement("span");s.textContent=t;tags.append(s)});
+  const h=document.createElement("h2");h.textContent=d.title;box.append(tags,h);
   for(const t of [d.purpose,d.interaction,d.compatibility[$("format").value],...d.limitations,d.implementation_note])if(t)box.append(p(t));
-  const a=document.createElement("a");a.href=d.preview;a.target="_blank";a.rel="noopener";a.textContent="Открыть живой пример ↗";box.append(a);
+  const a=document.createElement("a");a.href=d.preview;a.target="_blank";a.rel="noopener";a.className="btn-primary";a.textContent="Открыть живой пример ↗";box.append(a);
   const h3=document.createElement("h3");h3.textContent="Описание для воспроизведения";box.append(h3);
-  const pre=document.createElement("pre");pre.textContent=JSON.stringify({id:d.id,source_files:d.source_files,dependencies:d.dependencies,data:d.data,implementation_note:d.implementation_note},null,2);box.append(pre);
-  box.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  const pre=document.createElement("pre");pre.tabIndex=0;pre.textContent=JSON.stringify({id:d.id,source_files:d.source_files,dependencies:d.dependencies,data:d.data,implementation_note:d.implementation_note},null,2);box.append(pre);
+  box.scrollIntoView({behavior:reduced?"auto":"smooth"});
 }
 function mark(){document.querySelectorAll("#list .mc").forEach(c=>c.classList.toggle("is-compared",comparison.some(x=>x.id===c.dataset.id)))}
+/* Сравнение двух примеров: два окна и значок VS между ними */
 function compare(d){
   if(comparison.some(x=>x.id===d.id))comparison=comparison.filter(x=>x.id!==d.id);else{if(comparison.length===2)comparison.shift();comparison.push(d)}
-  $("compare").replaceChildren();
-  comparison.forEach(x=>{const s=document.createElement("section"),h=document.createElement("h2"),f=document.createElement("iframe"),c=document.createElement("button");h.textContent=x.title;f.src=x.preview;f.title=x.title;c.type="button";c.className="btn-quiet";c.textContent="Убрать из сравнения";c.onclick=()=>compare(x);s.append(h,c,f);$("compare").append(s)});
-  mark();if(comparison.length)$("compare").scrollIntoView({behavior:"smooth"});
+  const box=$("compare");box.replaceChildren();
+  comparison.forEach((x,i)=>{
+    if(i===1){const vs=document.createElement("span");vs.className="vs";vs.textContent="VS";vs.setAttribute("aria-hidden","true");box.append(vs)}
+    const s=document.createElement("section"),h=document.createElement("h2"),f=document.createElement("iframe"),c=document.createElement("button"),k=document.createElement("small");
+    s.style.setProperty("--side",i);
+    k.textContent=x.category;h.textContent=x.title;f.src=x.preview;f.title=x.title;
+    c.type="button";c.className="btn-quiet";c.textContent="Убрать из сравнения";c.onclick=()=>compare(x);
+    const head=document.createElement("div");head.className="cmp-head";const t=document.createElement("div");t.append(k,h);head.append(t,c);
+    s.append(head,f);
+    if(x.purpose)s.append(p(x.purpose));
+    box.append(s);
+  });
+  mark();if(comparison.length)box.scrollIntoView({behavior:reduced?"auto":"smooth"});
 }
 const isDemo=d=>/^demo\.html/.test(d.preview);
+function reset(){$("query").value="";$("task").value="";render();$("detail").hidden=true}
 function render(){
   const q=$("query").value.toLowerCase(),task=$("task").value;
   const sel=data.entries.filter(d=>(!task||d.tasks.includes(task))&&[d.title,d.purpose,d.interaction,d.id].join(" ").toLowerCase().includes(q));
   $("count").textContent=sel.length+" из "+data.entries.length+" приёмов";$("format-note").textContent=data.formats[$("format").value];
   AtlasCards.clear($("list"));
-  if(!sel.length){const e=p("Совпадений нет. Сбросьте задачу или попробуйте другое слово.");e.className="empty";$("list").replaceChildren(e);return}
+  if(!sel.length){$("list").replaceChildren(AtlasFX.emptyState("Сбросьте задачу или попробуйте другое слово.",reset));return}
   const frag=document.createDocumentFragment();
-  sel.forEach((d,i)=>frag.append(AtlasCards.card({id:d.id,title:d.title,desc:d.purpose,num:i+1,tags:[d.category,...d.tasks],
+  sel.forEach((d,i)=>{const c=AtlasCards.card({id:d.id,title:d.title,desc:d.purpose,num:i+1,tags:[d.category,...d.tasks],
     src:isDemo(d)?d.preview+"&compact=1":null,poster:isDemo(d)?null:"previews/"+d.id+".png",badge:isDemo(d)?null:"3D-сцена",
     actions:[{act:"detail",label:"Применимость"},{act:"compare",label:"Сравнить"},{act:"open",label:"↗",primary:true,aria:"Открыть живой пример «"+d.title+"» в новой вкладке"}],
-    onAction:(act,o)=>{const e=data.entries.find(x=>x.id===o.id);if(act==="detail")show(e);else if(act==="compare")compare(e);else window.open(e.preview,"_blank","noopener")}})));
+    onAction:(act,o)=>{const e=data.entries.find(x=>x.id===o.id);if(act==="detail")show(e);else if(act==="compare")compare(e);else window.open(e.preview,"_blank","noopener")}});
+    c.style.setProperty("--i",i);frag.append(c)});
   $("list").replaceChildren(frag);mark();
 }
 const params=new URLSearchParams(location.search);
@@ -51,4 +100,5 @@ fetch("catalog.json").then(r=>{if(!r.ok)throw Error();return r.json()}).then(d=>
 ["query","task","format"].forEach(id=>$(id).addEventListener("input",()=>{if(!data)return;render();$("detail").hidden=true}));
 })();
 </script>
-</body></html>
+</body>
+</html>

@@ -27,20 +27,22 @@ function renderFilters(){
 }
 function open(x){x.kind==="scene"?openScene(x):openDemo(x)}
 function onAction(act,o){const x=lib.find(i=>i.id===o.id);if(!x)return;if(act==="code")showCodeDialog(x);else open(x)}
+const stag=(c,i)=>{c.style.setProperty("--i",i);return c};
 function render(){
   const q=$("search").value.trim().toLowerCase(),box=$("gallery");
   AtlasCards.clear(box);
   const shown=lib.filter(x=>matches(x,q));
   $("results").textContent=shown.length+" из "+lib.length+" примеров";
   renderFilters();
-  if(!shown.length){const p=document.createElement("p");p.className="empty";p.textContent="Совпадений нет. Попробуйте «линия», «счётчик», «текст» или другую категорию.";box.replaceChildren(p);return}
+  if(!shown.length){box.replaceChildren(AtlasFX.emptyState("Попробуйте «линия», «счётчик», «текст» или другую категорию.",()=>{group=ALL;$("search").value="";render()}));return}
   const frag=document.createDocumentFragment();
-  shown.forEach(x=>frag.append(AtlasCards.card({id:x.id,title:x.title,desc:x.use,num:x.num,
+  /* --i задаёт задержку появления: карточки выстраиваются волной */
+  shown.forEach((x,i)=>frag.append(stag(AtlasCards.card({id:x.id,title:x.title,desc:x.use,num:x.num,
     tags:[x.group,...(x.task?[x.task]:[])],
     src:x.kind==="demo"?"demo.html?id="+encodeURIComponent(x.id)+"&compact=1":null,
     poster:x.kind==="scene"?"previews/"+x.id+".png":null,
     badge:x.kind==="scene"?"3D-сцена":null,
-    actions:[{act:"code",label:"Код"},{act:"open",label:"→",primary:true,aria:"Открыть «"+x.title+"» крупно"}],onAction})));
+    actions:[{act:"code",label:"Код"},{act:"open",label:"→",primary:true,aria:"Открыть «"+x.title+"» крупно"}],onAction}),i)));
   box.replaceChildren(frag);
 }
 $("filters").onclick=e=>{const b=e.target.closest("[data-group]");if(b){group=b.dataset.group;render()}};
