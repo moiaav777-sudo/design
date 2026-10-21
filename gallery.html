@@ -1,14 +1,60 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Библиотека визуализаций — Design Atlas</title><meta name="description" content="Все интерактивные визуализации Design Atlas на микрокарточках: у каждого примера живое превью, поиск, фильтры и исходный код."><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23062a5f'/%3E%3Cpath d='M8 18L18 6l-2 9h8L14 27l2-9z' fill='%2399c2ff'/%3E%3C/svg%3E"><link rel="stylesheet" href="brand-fonts.css"><link rel="stylesheet" href="atlas-light.css"></head><body>
-<header class="topbar"><a class="brand" href="./" aria-label="Design Atlas — главная"><span class="brand-symbol">⬡</span><span>design<span class="dot">.</span><small>ATLAS</small></span></a><nav aria-label="Навигация"><a href="./">Обзор</a><a href="./#finder">Подбор</a><a class="selected" href="gallery.html" aria-current="page">Библиотека</a><a href="catalog.html">Каталог</a><a href="./#agents">Для ИИ</a></nav><a class="top-cta" href="catalog.html">Каталог по задачам <span>→</span></a></header>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0722">
+<title>Библиотека визуализаций — Design Atlas</title>
+<meta name="description" content="Все интерактивные визуализации Design Atlas на микрокарточках: у каждого примера живое превью, поиск, фильтры и исходный код.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0722'/%3E%3Cpath d='M16 4l10 6v12l-10 6-10-6V10z' fill='none' stroke='%232de2ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ff3ea5'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="brand-fonts.css">
+<link rel="stylesheet" href="atlas-light.css">
+</head>
+<body>
+<a class="skip" href="#gallery">К списку примеров</a>
+<header class="topbar">
+  <a class="brand" href="./" aria-label="Design Atlas — главная"><span class="brand-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="#2de2ff" stroke-width="1.7" aria-hidden="true"><path d="M12 2.5l8.5 5v9L12 21.5l-8.5-5v-9z"/><circle cx="12" cy="12" r="2.6" fill="#ff3ea5" stroke="none"/></svg></span><span>design<span class="dot">.</span><small>ATLAS</small></span></a>
+  <nav aria-label="Навигация"><a href="./">Обзор</a><a href="./#finder">Подбор</a><a class="selected" href="gallery.html" aria-current="page">Библиотека</a><a href="catalog.html">Каталог</a><a href="./#agents">Промпт</a></nav>
+  <a class="top-cta" href="catalog.html">Каталог по задачам <span aria-hidden="true">→</span></a>
+</header>
 <main>
-<section class="lib-head"><div class="ambient"></div><div class="eyebrow">БИБЛИОТЕКА ПРИМЕРОВ</div><h1>Каждый пример — <span>живая микрокарточка.</span></h1><p class="subline">Графики, цифры, SVG, интерфейсные приёмы, сложные сцены и 3D. Наведите курсор, чтобы повторить анимацию, откройте пример крупно или заберите исходный код.</p><div class="lib-count"><b id="total">…</b><span>примеров<br>с живым превью</span></div></section>
-<section class="lib-tools" aria-label="Выбор примеров"><div class="lib-row"><label class="lib-search"><span class="magnify" aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Найти пример: линия, число, перетаскивание…" aria-label="Поиск примеров" autocomplete="off"></label><label class="lib-speed">Скорость <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label><button id="replay-visible" class="btn-primary" type="button">Повторить видимые</button></div><div class="chips" id="filters" aria-label="Категории"></div></section>
+<section class="lib-head">
+  <div class="eyebrow" data-reveal>Библиотека примеров</div>
+  <h1 data-reveal style="--d:1">Каждый пример — <span class="grad">живая микрокарточка.</span></h1>
+  <p class="subline" data-reveal style="--d:2">Графики, цифры, SVG, интерфейсные приёмы, сложные сцены и 3D. Наведите курсор, чтобы повторить анимацию, откройте пример крупно или заберите исходный код.</p>
+  <div class="lib-count" data-reveal style="--d:3"><b id="total">…</b><span>примеров<br>с живым превью</span></div>
+</section>
+<section class="lib-tools" aria-label="Выбор примеров">
+  <div class="lib-row">
+    <label class="lib-search"><span class="magnify" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg></span><input id="search" type="search" placeholder="Найти пример: линия, число, перетаскивание…" aria-label="Поиск примеров" autocomplete="off"></label>
+    <label class="lib-speed">Скорость <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label>
+    <button id="replay-visible" class="btn-primary" type="button">Повторить видимые</button>
+  </div>
+  <div class="chips" id="filters" aria-label="Категории"></div>
+</section>
 <div class="result-line"><span id="results" aria-live="polite"></span><span>Наведите курсор на карточку, чтобы повторить анимацию</span></div>
 <div id="gallery" class="mc-grid"></div>
 <noscript><p class="empty">Для живых примеров включите JavaScript.</p></noscript>
-<section id="design-agents" class="agents"><div><span class="agent-overline">ДЛЯ ИИ-АГЕНТОВ</span><h2>Ваш агент тоже умеет выбирать.</h2><p>Передайте ИИ ссылку на репозиторий и попросите подобрать 2–3 подходящих варианта. Агент прочитает машинный каталог и инструкцию, оценит совместимость и внедрит выбранный пример.</p><div class="agent-actions"><button id="copy-agent" class="btn-primary" type="button">Скопировать промпт для ИИ →</button><a href="AI-GUIDE.md">Инструкция для агента</a><a href="catalog.json">JSON-каталог</a></div><span id="copy-agent-status" class="agent-status" role="status"></span></div><div class="agent-code"><small>HOW IT WORKS</small><code>01  Прочитать catalog.json<br>02  Определить задачу<br>03  Предложить три варианта<br>04  Проверить исходники<br>05  Внедрить и протестировать</code><a href="https://github.com/moiaav777-sudo/design">Репозиторий на GitHub ↗</a></div></section>
+<section id="design-agents" class="agents" data-reveal>
+  <div>
+    <span class="agent-overline">ПРЕЗЕНТАЦИЯ ЗА ОДИН ПРОМПТ</span>
+    <h2>Скопируйте промпт, добавьте <span class="grad">свой материал.</span></h2>
+    <p>Промпт учит любую нейросеть выбирать приём визуализации под смысл каждого слайда — график, динамику, процесс — и собирать готовую HTML-презентацию. Внешний вид задаёте вы: словами, дизайн-токенами, примером или брендбуком. Не задали — получите нейтральную светлую тему.</p>
+    <div class="agent-actions"><button class="btn-primary" type="button" data-prompt="full">Скопировать промпт →</button><button class="btn-quiet" type="button" data-prompt="short">Короткий, для ИИ с интернетом</button></div>
+    <div class="agent-actions"><a href="deck-starter.html">Шаблон-образец ↗</a><a href="prompt-full.txt">Текст промпта ↗</a><a href="AI-GUIDE.md">Как пользоваться</a></div>
+    <span id="copy-agent-status" class="agent-status" role="status"></span>
+  </div>
+  <div class="agent-code">
+    <div class="term-bar"><i></i><i></i><i></i><small>HOW IT WORKS</small></div>
+    <code><span style="--n:0"><em>01</em>Скопировать промпт</span><span style="--n:1"><em>02</em>Вставить свой материал</span><span style="--n:2"><em>03</em>Описать стиль или дать токены</span><span style="--n:3"><em>04</em>Отправить в любую нейросеть</span><span style="--n:4"><em>05</em>Получить HTML-презентацию</span></code>
+    <a href="deck-starter.html">Посмотреть образец результата ↗</a>
+  </div>
+</section>
 </main>
-<footer><a href="./">◈ design. ATLAS</a><span>Публичная библиотека · Данные в примерах условные</span><a href="https://github.com/moiaav777-sudo/design/issues/new">Предложить визуализацию ↗</a></footer>
-<dialog id="preview-dialog" class="dlg"><div class="dlg-head"><div><span class="eyebrow" id="preview-group">Крупный просмотр</span><h2 id="preview-title"></h2></div><div class="dlg-tools"><a id="preview-full" target="_blank" rel="noopener">В отдельной вкладке ↗</a><button id="preview-code" class="btn-quiet" type="button">Код</button><button id="close-preview" class="btn-quiet" type="button">Закрыть</button></div></div><div id="preview-frame" class="dlg-frame"></div><p class="preview-note" id="preview-note"></p></dialog>
-<dialog id="code-dialog" class="dlg"><div class="dlg-head"><div><span class="eyebrow">Рабочий пример</span><h2 id="code-title"></h2></div><button id="close-code" class="btn-quiet" type="button" aria-label="Закрыть код">Закрыть</button></div><div class="code-tabs"><button data-tab="js" aria-pressed="true" type="button">JavaScript</button><button data-tab="html" aria-pressed="false" type="button">Разметка</button><button data-tab="css" aria-pressed="false" type="button">Стили</button><button id="copy" class="btn-primary" type="button">Копировать</button></div><p id="code-note" class="preview-note"></p><pre id="source"></pre><a hidden id="docs" target="_blank" rel="noopener">Документация инструмента ↗</a></dialog>
-<script src="demos.js"></script><script src="charts.js"></script><script src="stories.js"></script><script src="ideas.js"></script><script src="atlas-cards.js"></script><script src="gallery.js"></script><script src="design-refresh.js"></script></body></html>
+<footer><a href="./">◈ design. ATLAS</a><span>Публичная библиотека · Данные в примерах условные</span><a href="catalog.json">catalog.json</a><a href="AI-GUIDE.md">AI-GUIDE.md</a><a href="https://github.com/moiaav777-sudo/design/issues/new">Предложить визуализацию ↗</a></footer>
+<dialog id="preview-dialog" class="dlg" aria-labelledby="preview-title"><div class="dlg-head"><div><span class="eyebrow" id="preview-group">Крупный просмотр</span><h2 id="preview-title"></h2></div><div class="dlg-tools"><a id="preview-full" target="_blank" rel="noopener">В отдельной вкладке ↗</a><button id="preview-code" class="btn-quiet" type="button">Код</button><button id="close-preview" class="btn-quiet" type="button">Закрыть</button></div></div><div id="preview-frame" class="dlg-frame"></div><p class="preview-note" id="preview-note"></p></dialog>
+<dialog id="code-dialog" class="dlg" aria-labelledby="code-title"><div class="dlg-head"><div><span class="eyebrow">Рабочий пример</span><h2 id="code-title"></h2></div><button id="close-code" class="btn-quiet" type="button" aria-label="Закрыть код">Закрыть</button></div><div class="code-tabs"><button data-tab="js" aria-pressed="true" type="button">JavaScript</button><button data-tab="html" aria-pressed="false" type="button">Разметка</button><button data-tab="css" aria-pressed="false" type="button">Стили</button><button id="copy" class="btn-primary" type="button">Копировать</button></div><p id="code-note" class="preview-note"></p><pre id="source" tabindex="0"></pre><a hidden id="docs" target="_blank" rel="noopener">Документация инструмента ↗</a></dialog>
+<script src="demos.js"></script><script src="charts.js"></script><script src="stories.js"></script><script src="ideas.js"></script><script src="atlas-fx.js"></script><script src="atlas-cards.js"></script><script src="gallery.js"></script><script src="design-refresh.js"></script>
+</body>
+</html>

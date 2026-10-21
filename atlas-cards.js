@@ -28,7 +28,7 @@ function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className
 function card(o){
   const a=el("article","mc");a.dataset.id=o.id;
   const view=el("div","mc-view");view.append(el("span","mc-ph",o.title.replace(/^[^\p{L}\p{N}]+/u,"").charAt(0)));
-  if(o.poster){const img=el("img","mc-poster");img.src=o.poster;img.alt="";img.loading="lazy";view.append(img)}
+  if(o.poster){view.classList.add("has-poster");const img=el("img","mc-poster");img.src=o.poster;img.alt="";img.loading="lazy";view.append(img)}
   if(o.tags&&o.tags[0])view.append(el("span","mc-tag",o.tags[0]));
   if(o.badge)view.append(el("span","mc-badge",o.badge));
   if(o.num!=null)view.append(el("span","mc-num",String(o.num).padStart(2,"0")));
@@ -38,6 +38,9 @@ function card(o){
   const acts=el("div","mc-actions");
   (o.actions||[]).forEach(x=>{const b=el("button",x.primary?"mc-go":"mc-btn",x.label);b.type="button";b.dataset.act=x.act;if(x.primary)b.setAttribute("aria-label",x.aria||x.label);acts.append(b)});
   foot.append(acts);body.append(foot);a.append(view,body);
+  /* превью доступно с клавиатуры: Enter или пробел открывают пример */
+  view.tabIndex=0;view.setAttribute("role","button");view.setAttribute("aria-label","Открыть «"+o.title+"»");
+  view.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target===view){e.preventDefault();if(o.onAction)o.onAction("open",o)}});
   a.addEventListener("click",e=>{const b=e.target.closest("[data-act]");const act=b?b.dataset.act:(e.target.closest(".mc-view")?"open":null);if(act&&o.onAction)o.onAction(act,o)});
   a.addEventListener("pointerenter",()=>{const s=items.get(view);if(s&&s.ready&&!paused){send(s,"play");s.played=true}});
   const s={view,src:o.src||null,title:o.title,frame:null,ready:false,visible:false,played:false,seen:0};

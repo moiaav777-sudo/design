@@ -1,5 +1,20 @@
-/* Каталог: шапка страницы и параметры подбора */
-.cat-head{position:relative;padding:44px 5px 14px}.cat-head h1{font-size:clamp(34px,3.6vw,58px);letter-spacing:-.06em;line-height:1.06;margin:14px 0 14px;font-weight:900;max-width:900px}.cat-head h1 em{font-style:normal;color:#5340e9}.cat-head p{max-width:720px;color:#596a95;line-height:1.65;margin:0 0 18px}.cat-links{display:flex;gap:18px;flex-wrap:wrap}.cat-links a{font-size:13px;font-weight:700;color:#4b41d5}
-.cat-controls{display:flex;flex-wrap:wrap;gap:14px;margin:6px 0 10px}.cat-controls label{display:grid;gap:6px;font-size:12px;font-weight:700;color:#596a95}.cat-controls input{min-width:240px}
-.cat-note{font-size:12px;color:#6e7fa4;margin:6px 2px;line-height:1.6}
-@media(max-width:670px){.cat-head{padding:28px 0 10px}.cat-controls input{min-width:0;width:100%}.cat-controls label{flex:1 1 100%}}
+/* Каталог: шапка страницы и параметры подбора (неоновая тема) */
+.cat-head { position: relative; padding: 56px 0 26px; }
+.cat-head h1 { font-size: clamp(36px, 4.6vw, 76px); letter-spacing: -.055em; line-height: 1.03; margin: 14px 0 18px; font-weight: 800; max-width: 1000px; text-wrap: balance; }
+.cat-head h1 em { font-style: normal; }
+.cat-head p { max-width: 680px; color: var(--ink-2); font-size: clamp(15px, 1.25vw, 19px); line-height: 1.65; margin: 0 0 20px; }
+.cat-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.cat-links a { font-size: 13px; font-weight: 700; color: var(--cyan); padding: 9px 15px; border: 1px solid var(--line-2); border-radius: 30px; background: var(--glass-2); transition: all var(--t); }
+.cat-links a:hover { border-color: var(--cyan); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+.cat-controls { display: flex; flex-wrap: wrap; gap: 14px; margin: 0 0 6px; }
+.cat-controls label { display: grid; gap: 6px; font: 600 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.cat-controls input, .cat-controls select { font-family: var(--font); font-weight: 500; letter-spacing: 0; text-transform: none; }
+.cat-controls input { min-width: 260px; }
+.cat-controls select { min-width: 210px; }
+.cat-note { font-size: 12px; color: var(--ink-3); margin: 6px 2px 4px; line-height: 1.6; max-width: 900px; }
+@media (max-width: 860px) { .cat-tools { position: static; } }
+@media (max-width: 670px) {
+  .cat-head { padding: 32px 0 14px; }
+  .cat-controls input, .cat-controls select { min-width: 0; width: 100%; }
+  .cat-controls label { flex: 1 1 100%; }
+}
