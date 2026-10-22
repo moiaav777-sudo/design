@@ -15,7 +15,7 @@ const lib=[...SCENES,...DEMO_ORDER.map(d=>({kind:"demo",id:d.id,title:d.title,gr
 lib.forEach((x,i)=>x.num=i+1);
 const ALL="Все примеры";
 const params=new URLSearchParams(location.search);
-let group=params.get("group")||ALL,speed=1,codeItem=null,codeTab="js",cssText="",reactText="",current=null;
+let group=params.get("group")||ALL,speed=1,codeItem=null,codeTab="js",cssText="",reactText="";
 if(group!==ALL&&!lib.some(x=>x.group===group))group=ALL;
 $("search").value=params.get("q")||"";
 $("total").textContent=lib.length;
@@ -25,7 +25,7 @@ function renderFilters(){
   const names=[ALL,"Отдельные сцены",...GROUPS.filter(g=>lib.some(x=>x.group===g)),...[...new Set(lib.map(x=>x.group))].filter(g=>g!=="Отдельные сцены"&&!GROUPS.includes(g))];
   $("filters").replaceChildren(...names.map(g=>{const b=document.createElement("button");b.type="button";b.className="chip"+(g===group?" active":"");b.setAttribute("aria-pressed",g===group);b.dataset.group=g;b.textContent=g+" ";const n=document.createElement("small");n.textContent=g===ALL?lib.length:lib.filter(x=>x.group===g).length;b.append(n);return b}));
 }
-function open(x){x.kind==="scene"?openScene(x):openDemo(x)}
+const open=openPreview;
 function onAction(act,o){const x=lib.find(i=>i.id===o.id);if(!x)return;if(act==="code")showCodeDialog(x);else open(x)}
 const stag=(c,i)=>{c.style.setProperty("--i",i);return c};
 function render(){
@@ -50,25 +50,15 @@ $("search").oninput=render;
 $("speed").onchange=e=>{speed=+e.target.value;AtlasCards.setSpeed(speed)};
 $("replay-visible").onclick=()=>AtlasCards.replayVisible();
 
-/* Крупный просмотр */
-const pd=$("preview-dialog");
-function openDemo(x){
-  const f=document.createElement("iframe");f.title=x.title;f.src="demo.html?id="+encodeURIComponent(x.id);
-  fillPreview(x,f,f.src);
-  const onMsg=e=>{if(e.origin!==location.origin||e.source!==f.contentWindow)return;if(e.data.type==="demo-ready"){f.contentWindow.postMessage({action:"speed",value:speed},location.origin);if(!reduced)f.contentWindow.postMessage({action:"play"},location.origin)}};
-  addEventListener("message",onMsg);pd.addEventListener("close",()=>removeEventListener("message",onMsg),{once:true});
+/* Крупный просмотр: общее окно AtlasViewer, в нём же кнопка «Код» */
+function openPreview(x){
+  AtlasViewer.open({title:x.title,group:x.group,speed,
+    src:x.kind==="scene"?x.file:"demo.html?id="+encodeURIComponent(x.id),
+    full:x.kind==="scene"?x.file:"demo.html?id="+encodeURIComponent(x.id),
+    note:x.kind==="demo"?x.hint+" Где применять: "+x.use:x.desc+" Данные демонстрационные.",
+    onCode:()=>showCodeDialog(x)});
 }
-function openScene(x){const f=document.createElement("iframe");f.title=x.title;f.src=x.file;fillPreview(x,f,x.file)}
-function fillPreview(x,frame,full){
-  current=x;AtlasCards.pause();
-  $("preview-group").textContent=x.group;$("preview-title").textContent=x.title;$("preview-full").href=full;
-  $("preview-note").textContent=x.kind==="demo"?x.hint+" Где применять: "+x.use:x.desc+" Данные демонстрационные.";
-  $("preview-frame").replaceChildren(frame);pd.showModal();
-}
-$("close-preview").onclick=()=>pd.close();
-pd.addEventListener("close",()=>{$("preview-frame").replaceChildren();current=null;AtlasCards.resume()});
-$("preview-code").onclick=()=>{if(current){const x=current;pd.close();showCodeDialog(x)}};
-for(const d of [pd,$("code-dialog")])d.addEventListener("click",e=>{if(e.target===d)d.close()});
+$("code-dialog").addEventListener("click",e=>{if(e.target===$("code-dialog"))$("code-dialog").close()});
 
 /* Исходный код */
 function sourceJS(d){
@@ -92,7 +82,7 @@ function showCode(){
   $("code-note").textContent=codeTab==="js"?"Это код, который выполняется в карточке. Разметка и стили — в соседних вкладках.":"Разметка и общие стили живых примеров.";
 }
 function showCodeDialog(x){codeItem=x;codeTab="js";showCode();$("code-dialog").showModal();AtlasCards.pause()}
-$("code-dialog").addEventListener("close",()=>{if(!pd.open)AtlasCards.resume()});
+$("code-dialog").addEventListener("close",AtlasCards.resume);
 document.querySelector(".code-tabs").onclick=e=>{const t=e.target.dataset.tab;if(t){codeTab=t;showCode()}};
 $("close-code").onclick=()=>$("code-dialog").close();
 $("copy").onclick=async()=>{try{await navigator.clipboard.writeText($("source").textContent);$("copy").textContent="Скопировано";setTimeout(()=>$("copy").textContent="Копировать",1500)}catch{$("code-note").textContent="Выделите код и скопируйте его вручную."}};

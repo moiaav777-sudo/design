@@ -28,7 +28,7 @@
   cards($("sceneCards"), SCENES.map(([id, title, desc, tags], i) => ({
     id, title, desc, tags, poster: "previews/" + id + ".png", badge: i ? null : "Для старта",
     actions: [{ act: "open", label: "→", primary: true, aria: "Открыть «" + title + "»" }],
-    onAction: () => { location.href = id + ".html"; }
+    onAction: () => AtlasViewer.open({ title, group: "3D-сцена", src: id + ".html", note: desc + ". Данные демонстрационные." })
   })));
 
   /* Бегущие ленты строятся из данных каталога: категории с числом примеров и задачи */
@@ -85,7 +85,7 @@
     if (lb) cards(lb, live.map(e => ({
       id: e.id, title: e.title, desc: e.purpose, tags: [e.category, ...e.tasks], src: e.preview + "&compact=1",
       actions: [{ act: "open", label: "→", primary: true, aria: "Открыть «" + e.title + "»" }],
-      onAction: () => { location.href = "gallery.html?q=" + encodeURIComponent(e.title.split(" · ")[0]); }
+      onAction: () => AtlasViewer.openEntry(e)
     })));
   }
   fetch("catalog.json").then(r => { if (!r.ok) throw Error(); return r.json(); })
@@ -109,6 +109,8 @@
       const a = document.createElement("a");
       a.style.setProperty("--i", i);
       a.href = new URL(e.preview || "catalog.html", location.href).href;
+      /* результат подбора открывается сразу в окне просмотра; обычный переход остаётся для «в новой вкладке» */
+      a.addEventListener("click", ev => { if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button) return; ev.preventDefault(); AtlasViewer.openEntry(e); });
       const t = document.createElement("span"); t.textContent = e.title + " ↗";
       const s = document.createElement("small"); s.textContent = e.category;
       a.append(t, s); output.append(a);

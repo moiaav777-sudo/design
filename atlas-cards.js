@@ -1,30 +1,43 @@
 /* Микрокарточки Design Atlas: ленивое живое превью примеров.
-   Живой iframe держится только у карточек на экране (не больше MAX_LIVE), остальные снова становятся заглушкой. */
+   Живой iframe держится только у карточек на экране (не больше MAX_LIVE), остальные снова становятся заглушкой.
+   Анимация каждой карточки идёт по кругу: построилась, пауза, снова построилась — независимо от наведения курсора.
+   Карточки с постером (отдельные сцены) без iframe: их движение — циклическая CSS-анимация картинки. */
 (()=>{"use strict";
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches,MAX_LIVE=10;
 const items=new Map();let speed=1,tick=0,paused=false;
 const send=(s,action,value)=>{if(s.frame&&s.frame.contentWindow)s.frame.contentWindow.postMessage({action,value},location.origin)};
-const unmount=s=>{if(!s.frame)return;s.frame.remove();s.frame=null;s.ready=false;s.played=false;s.view.classList.remove("is-live")};
+const unmount=s=>{clearTimeout(s.timer);if(!s.frame)return;s.frame.remove();s.frame=null;s.ready=false;s.played=false;s.view.classList.remove("is-live")};
+/* Цикл: следующий запуск через длительность анимации + пауза (от 4,5 до 12 с); у каждой карточки своё время, поэтому они не мигают разом */
+const LOOP_MIN=4500,LOOP_MAX=12000;
+function schedule(s){
+  clearTimeout(s.timer);
+  if(reduced||paused||!s.visible||!s.ready)return;
+  let d=7000;
+  try{const a=s.frame.contentWindow.demoAnimation,t=a&&a.totalDuration?a.totalDuration():0;if(t&&isFinite(t))d=t*1000/speed+2400}catch{}
+  d=Math.max(LOOP_MIN,Math.min(LOOP_MAX,d))+Math.random()*900;
+  s.timer=setTimeout(()=>{if(s.visible&&s.ready&&!paused)send(s,"play");schedule(s)},d);
+}
 function trim(){const live=[...items.values()].filter(s=>s.frame);if(live.length<=MAX_LIVE)return;live.filter(s=>!s.visible).sort((a,b)=>a.seen-b.seen).slice(0,live.length-MAX_LIVE).forEach(unmount)}
 function mount(s){
-  if(s.frame){if(s.ready&&!paused){send(s,"unfreeze");if(!s.played&&!reduced){send(s,"play");s.played=true}}return}
+  if(s.frame){if(s.ready&&!paused){send(s,"unfreeze");if(!s.played&&!reduced){send(s,"play");s.played=true}schedule(s)}return}
   if(!s.src||paused)return;
   const f=document.createElement("iframe");f.title=s.title;f.tabIndex=-1;f.setAttribute("aria-hidden","true");f.src=s.src;
-  s.view.append(f);s.frame=f;s.ready=false;s.view.classList.remove("is-error");trim();
+  s.view.append(f);s.frame=f;s.ready=false;s.view.classList.remove("is-error");
+  trim();
 }
-const io=new IntersectionObserver(es=>{for(const e of es){const s=items.get(e.target);if(!s)continue;s.visible=e.isIntersecting;if(s.visible){s.seen=++tick;mount(s)}else if(s.frame&&s.ready)send(s,"freeze")}},{rootMargin:"160px"});
+const io=new IntersectionObserver(es=>{for(const e of es){const s=items.get(e.target);if(!s)continue;s.visible=e.isIntersecting;if(s.visible){s.seen=++tick;mount(s)}else{clearTimeout(s.timer);if(s.frame&&s.ready)send(s,"freeze")}}},{rootMargin:"160px"});
 const ro=new ResizeObserver(es=>{for(const e of es)e.target.style.setProperty("--k",(e.contentRect.width/900).toFixed(4))});
 addEventListener("message",e=>{
   if(e.origin!==location.origin)return;
   for(const s of items.values()){
     if(!s.frame||e.source!==s.frame.contentWindow)continue;
-    if(e.data&&e.data.type==="demo-ready"){s.ready=true;s.view.classList.add("is-live");send(s,"speed",speed);if(s.visible&&!s.played&&!reduced&&!paused){send(s,"play");s.played=true}if(!s.visible||paused)send(s,"freeze")}
+    if(e.data&&e.data.type==="demo-ready"){s.ready=true;s.view.classList.add("is-live");send(s,"speed",speed);if(s.visible&&!s.played&&!reduced&&!paused){send(s,"play");s.played=true}if(!s.visible||paused)send(s,"freeze");else schedule(s)}
     else if(e.data&&e.data.type==="demo-error"){s.view.classList.add("is-error")}
     return;
   }
 });
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
-/* opts: id,title,desc,tags[],src (живой пример) или poster (картинка),num,badge,actions[{act,label,primary}],onAction */
+/* opts: id,title,desc,tags[],src (живой пример) или poster (картинка с зацикленным движением),num,badge,actions[{act,label,primary}],onAction */
 function card(o){
   const a=el("article","mc");a.dataset.id=o.id;
   const view=el("div","mc-view");view.append(el("span","mc-ph",o.title.replace(/^[^\p{L}\p{N}]+/u,"").charAt(0)));
@@ -42,15 +55,15 @@ function card(o){
   view.tabIndex=0;view.setAttribute("role","button");view.setAttribute("aria-label","Открыть «"+o.title+"»");
   view.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target===view){e.preventDefault();if(o.onAction)o.onAction("open",o)}});
   a.addEventListener("click",e=>{const b=e.target.closest("[data-act]");const act=b?b.dataset.act:(e.target.closest(".mc-view")?"open":null);if(act&&o.onAction)o.onAction(act,o)});
-  a.addEventListener("pointerenter",()=>{const s=items.get(view);if(s&&s.ready&&!paused){send(s,"play");s.played=true}});
-  const s={view,src:o.src||null,title:o.title,frame:null,ready:false,visible:false,played:false,seen:0};
+  a.addEventListener("pointerenter",()=>{const s=items.get(view);if(s&&s.ready&&!paused){send(s,"play");s.played=true;schedule(s)}});
+  const s={view,src:o.src||null,title:o.title,timer:0,frame:null,ready:false,visible:false,played:false,seen:0};
   items.set(view,s);ro.observe(view);io.observe(view);
   return a;
 }
 function clear(root){root.querySelectorAll(".mc-view").forEach(v=>{const s=items.get(v);if(s){unmount(s);io.unobserve(v);ro.unobserve(v);items.delete(v)}})}
 window.AtlasCards={card,clear,
   setSpeed(v){speed=v;items.forEach(s=>send(s,"speed",v))},
-  replayVisible(){items.forEach(s=>{if(s.visible){if(!s.frame)mount(s);if(s.ready){send(s,"play");s.played=true}else s.played=false}})},
-  pause(){paused=true;items.forEach(s=>send(s,"freeze"))},
+  replayVisible(){items.forEach(s=>{if(s.visible){if(!s.frame)mount(s);if(s.ready){send(s,"play");s.played=true;schedule(s)}else s.played=false}})},
+  pause(){paused=true;items.forEach(s=>{clearTimeout(s.timer);send(s,"freeze")})},
   resume(){paused=false;items.forEach(s=>{if(s.visible)mount(s)})}};
 })();

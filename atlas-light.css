@@ -460,3 +460,10 @@ footer a:hover { color: var(--cyan); text-shadow: var(--glow-cyan); }
   .cursor-glow, .typed-cursor { display: none; }
   .mc-view:not(.is-live)::before { animation: none; }
 }
+
+/* Постеры сцен: медленное «дыхание» картинки по кругу, чтобы карточки без iframe тоже были живыми */
+@keyframes poster-drift { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.12) translate(-2.5%, -2%); } }
+.mc-view.has-poster .mc-poster { animation: poster-drift 8s ease-in-out infinite alternate; }
+.mc-view.has-poster::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, .16) 50%, transparent 65%); background-size: 260% 100%; animation: poster-sweep 5.5s linear infinite; }
+@keyframes poster-sweep { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+@media (prefers-reduced-motion: reduce) { .mc-view.has-poster .mc-poster, .mc-view.has-poster::before { animation: none; } }
