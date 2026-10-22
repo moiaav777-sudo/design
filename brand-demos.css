@@ -12,6 +12,8 @@ body, body.story-mode {
   background-size: 28px 28px;
 }
 body.story-mode #scene { background: none; }
+/* крупный просмотр: сцена с сеткой занимает всю рамку, без полосы другого цвета снизу */
+body:not(.compact):not(.story-mode) #scene { min-height: 100vh; }
 button { font-family: inherit; background: linear-gradient(120deg, #2de2ff, #9d8bff 60%, #ff6ec7); color: #0a0722; border: 0; font-weight: 700; box-shadow: 0 0 18px rgba(45, 226, 255, .3); }
 button:hover { box-shadow: 0 0 26px rgba(255, 110, 199, .5); }
 button:focus-visible, input:focus-visible { outline-color: var(--neon-cyan); }

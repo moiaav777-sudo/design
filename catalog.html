@@ -44,6 +44,7 @@
 <footer><a href="./">◈ design. ATLAS</a><span>Данные в примерах демонстрационные</span><a href="gallery.html">Вернуться к библиотеке ↗</a></footer>
 <script src="atlas-fx.js"></script>
 <script src="atlas-cards.js"></script>
+<script src="atlas-viewer.js"></script>
 <script>
 (()=>{"use strict";
 const $=id=>document.getElementById(id);let data,comparison=[];
@@ -91,7 +92,7 @@ function render(){
   sel.forEach((d,i)=>{const c=AtlasCards.card({id:d.id,title:d.title,desc:d.purpose,num:i+1,tags:[d.category,...d.tasks],
     src:isDemo(d)?d.preview+"&compact=1":null,poster:isDemo(d)?null:"previews/"+d.id+".png",badge:isDemo(d)?null:"3D-сцена",
     actions:[{act:"detail",label:"Применимость"},{act:"compare",label:"Сравнить"},{act:"open",label:"↗",primary:true,aria:"Открыть живой пример «"+d.title+"» в новой вкладке"}],
-    onAction:(act,o)=>{const e=data.entries.find(x=>x.id===o.id);if(act==="detail")show(e);else if(act==="compare")compare(e);else window.open(e.preview,"_blank","noopener")}});
+    onAction:(act,o)=>{const e=data.entries.find(x=>x.id===o.id);if(act==="detail")show(e);else if(act==="compare")compare(e);else AtlasViewer.openEntry(e)}});
     c.style.setProperty("--i",i);frag.append(c)});
   $("list").replaceChildren(frag);mark();
 }
